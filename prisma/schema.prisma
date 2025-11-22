@@ -1,0 +1,58 @@
+// prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite" 
+  url      = env("DATABASE_URL")
+}
+
+// --- CORE RBAC MODELS ---
+
+model User {
+  id        String     @id @default(uuid())
+  email     String     @unique
+  password  String     
+  firstName String?
+  lastName  String?
+  // UserRole must be one of: 'Admin', 'Manager', 'User'
+  role      String     @default("User") // Store role as a string (SQLite-compatible)
+
+  // Relationships
+  assignedTasks Task[]   @relation("AssignedTasks")
+  managedProjects Project[]
+}
+
+// --- PROJECT MANAGEMENT MODELS ---
+
+model Project {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+
+  // Relationship to the Manager (User) who manages this project
+  managerId   String
+  manager     User     @relation(fields: [managerId], references: [id])
+
+  // Tasks belonging to this project
+  tasks       Task[]
+}
+
+model Task {
+  id          String     @id @default(uuid())
+  title       String
+  description String?
+  // TaskStatus must be one of: 'ToDo', 'InProgress', 'Done'
+  status      String     @default("ToDo") // Store status as a string (SQLite-compatible)
+  createdAt   DateTime   @default(now())
+
+  // Relationship to the Project
+  projectId   String
+  project     Project    @relation(fields: [projectId], references: [id])
+
+  // Relationship to the assigned User
+  assignedToId String
+  assignedTo   User       @relation("AssignedTasks", fields: [assignedToId], references: [id])
+}
