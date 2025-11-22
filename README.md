@@ -1,40 +1,86 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/pages/api-reference/create-next-app).
+Task Management Dashboard
 
-## Getting Started
+This is a fullstack application built with Next.js, React, and Prisma, featuring role-based access control (RBAC) for Admin, Manager, and User roles.
 
-First, run the development server:
+🚀 Setup Instructions
 
-```bash
+Follow these steps to get the project running locally.
+
+1. Prerequisites
+
+Ensure you have the following installed on your system:
+
+Node.js (LTS version recommended, which includes npm)
+
+Git
+
+2. Install Dependencies
+
+Navigate to the project directory in your terminal and install all required packages using npm:
+
+npm install
+
+
+3. Environment Configuration
+
+Ensure your .env file is set up correctly. The following is required for local development:
+
+# .env file
+
+# CHANGE: Use local SQLite file for development
+DATABASE_URL="file:./dev.db" 
+
+# Security: Replace this with a strong, random key
+JWT_SECRET="your_default_secret_key_but_make_it_a_strong_random_string"
+
+
+4. Database Initialization (Crucial for First Login)
+
+To ensure the initial Admin user is created correctly (which fixes the "Invalid credentials" error), you must reset the database and run the seed script.
+
+Reset Database & Run Migrations: This wipes the local dev.db file and creates a fresh database structure based on your Prisma schema.
+
+npx prisma migrate reset --skip-generate --force
+
+
+Seed Initial Users: This command runs your prisma/seed.js script to populate the database with the initial Admin, Manager, and User accounts.
+
+npx prisma db seed
+
+
+5. Run the Application
+
+Start the Next.js development server:
+
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+The application will be accessible at: http://localhost:3000
 
-[API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
+6. Default Login Credentials
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) instead of React pages.
+After successfully running the seed command, you can log in with the following default credentials (if using the default seed data):
 
-This project uses [`next/font`](https://nextjs.org/docs/pages/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Role
 
-## Learn More
+Email
 
-To learn more about Next.js, take a look at the following resources:
+Password
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn-pages-router) - an interactive Next.js tutorial.
+Admin
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+admin@example.com
 
-## Deploy on Vercel
+password123
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Manager
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/pages/building-your-application/deploying) for more details.
+manager@example.com
+
+password123
+
+User
+
+user@example.com
+
+password123
